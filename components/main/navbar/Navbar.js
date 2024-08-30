@@ -13,7 +13,7 @@ async function Navbar() {
     <div className="flex items-center justify-between py-4">
       {/* logo */}
       <div>
-        <img  src={logo} />
+        <img src={logo} />
       </div>
       {/* signin  button and card shop */}
       <div className="flex items-center justify-between gap-x-6">

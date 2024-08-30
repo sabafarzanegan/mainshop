@@ -1,5 +1,6 @@
 import "./globals.css";
 import Navbar from "./../components/main/navbar/Navbar";
+import { ThemeProvider } from "../components/main/provider/Theme-Provider";
 
 import localFont from "next/font/local";
 
@@ -14,12 +15,18 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="fa" dir="rtl">
+    <html lang="fa" dir="rtl" suppressHydrationWarning>
       <body className={vazirFont.className}>
-        <main className="container">
-          <Navbar />
-          {children}
-        </main>
+        <ThemeProvider
+          className="transition-all duration-150"
+          attribute="class"
+          defaultTheme="system"
+          enableSystem>
+          <main className="container">
+            <Navbar />
+            {children}
+          </main>
+        </ThemeProvider>
       </body>
     </html>
   );

@@ -3,6 +3,8 @@ import { HiOutlineShoppingCart } from "react-icons/hi";
 import { BiLogIn } from "react-icons/bi";
 import { auth } from "../../../db/auth";
 import UserButton from "../userButton/UserButton";
+import { logo } from "../../../public/images/logo.png";
+import Image from "next/image";
 
 async function Navbar() {
   const session = await auth();
@@ -11,7 +13,7 @@ async function Navbar() {
     <div className="flex items-center justify-between py-4">
       {/* logo */}
       <div>
-        <h1>logo</h1>
+        <img  src={logo} />
       </div>
       {/* signin  button and card shop */}
       <div className="flex items-center justify-between gap-x-6">
@@ -27,7 +29,7 @@ async function Navbar() {
           ) : (
             <button
               asChild
-              className="flex items-center justify-center gap-x-1 px-5 py-2 bg-purple-600 text-white rounded-md">
+              className="flex items-center justify-center gap-x-1 px-5 py-2 bg-primary text-white rounded-md">
               <span>
                 <BiLogIn />
               </span>

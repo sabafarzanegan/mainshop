@@ -1,11 +1,12 @@
 import React from "react";
 import LoginCard from "./LoginCard";
+import RhfLogin from "./RhfLogin";
 
 function LoginForm() {
   return (
     <LoginCard title="ورود">
       <div>
-        <h1>hey</h1>
+        <RhfLogin />
       </div>
     </LoginCard>
   );

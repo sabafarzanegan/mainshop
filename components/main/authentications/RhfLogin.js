@@ -14,6 +14,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { emailSignin } from "../../../db/action";
+import Link from "next/link";
 
 const formSchema = z.object({
   email: z.string().email({
@@ -37,6 +38,7 @@ function RhfLogin() {
     },
   });
   return (
+    <>
     <Form {...form}>
       <form action={emailSignin} className="space-y-6 ">
         <FormField
@@ -74,7 +76,11 @@ function RhfLogin() {
           ورود
         </Button>
       </form>
+     
     </Form>
+   
+   </>
+    
   );
 }
 

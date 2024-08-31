@@ -5,7 +5,7 @@ import RhfLogin from "./RhfLogin";
 function LoginForm() {
   return (
     <LoginCard title="ورود">
-      <div>
+      <div className="">
         <RhfLogin />
       </div>
     </LoginCard>

@@ -11,12 +11,12 @@ import {
   serial,
   real,
   index,
-} from "drizzle-orm/pg-core"
+} from "drizzle-orm/pg-core";
 // import type { AdapterAccount } from "next-auth/adapters"
-import { createId } from "@paralleldrive/cuid2"
-import { InferSelectModel, relations } from "drizzle-orm"
+import { createId } from "@paralleldrive/cuid2";
+import { InferSelectModel, relations } from "drizzle-orm";
 
-export const RoleEnum = pgEnum("roles", ["user", "admin"])
+export const RoleEnum = pgEnum("roles", ["user", "admin"]);
 
 export const users = pgTable("user", {
   id: text("id")
@@ -29,9 +29,9 @@ export const users = pgTable("user", {
   image: text("image"),
   password: text("password"),
   twoFactorEnabled: boolean("twoFactorEnabled").default(false),
-  role: RoleEnum("roles").default("user"),
+  roles: RoleEnum("roles").default("user"),
   customerID: text("customerID"),
-})
+});
 
 export const accounts = pgTable(
   "account",
@@ -55,7 +55,7 @@ export const accounts = pgTable(
       columns: [account.provider, account.providerAccountId],
     }),
   })
-)
+);
 export const emailTokens = pgTable(
   "email_tokens",
   {
@@ -69,7 +69,7 @@ export const emailTokens = pgTable(
   (vt) => ({
     compoundKey: primaryKey({ columns: [vt.id, vt.token] }),
   })
-)
+);
 
 export const passwordResetTokens = pgTable(
   "password_reset_tokens",
@@ -84,7 +84,7 @@ export const passwordResetTokens = pgTable(
   (vt) => ({
     compoundKey: primaryKey({ columns: [vt.id, vt.token] }),
   })
-)
+);
 
 export const twoFactorTokens = pgTable(
   "two_factor_tokens",
@@ -100,7 +100,7 @@ export const twoFactorTokens = pgTable(
   (vt) => ({
     compoundKey: primaryKey({ columns: [vt.id, vt.token] }),
   })
-)
+);
 
 export const products = pgTable("products", {
   id: serial("id").primaryKey(),
@@ -108,7 +108,7 @@ export const products = pgTable("products", {
   title: text("title").notNull(),
   created: timestamp("created").defaultNow(),
   price: real("price").notNull(),
-})
+});
 
 export const productVariants = pgTable("productVariants", {
   id: serial("id").primaryKey(),
@@ -118,7 +118,7 @@ export const productVariants = pgTable("productVariants", {
   productID: serial("productID")
     .notNull()
     .references(() => products.id, { onDelete: "cascade" }),
-})
+});
 
 export const variantImages = pgTable("variantImages", {
   id: serial("id").primaryKey(),
@@ -129,7 +129,7 @@ export const variantImages = pgTable("variantImages", {
   variantID: serial("variantID")
     .notNull()
     .references(() => productVariants.id, { onDelete: "cascade" }),
-})
+});
 
 export const variantTags = pgTable("variantTags", {
   id: serial("id").primaryKey(),
@@ -137,12 +137,12 @@ export const variantTags = pgTable("variantTags", {
   variantID: serial("variantID")
     .notNull()
     .references(() => productVariants.id, { onDelete: "cascade" }),
-})
+});
 
 export const productRelations = relations(products, ({ many }) => ({
   productVariants: many(productVariants, { relationName: "productVariants" }),
   reviews: many(reviews, { relationName: "reviews" }),
-}))
+}));
 
 export const productVariantsRelations = relations(
   productVariants,
@@ -155,7 +155,7 @@ export const productVariantsRelations = relations(
     variantImages: many(variantImages, { relationName: "variantImages" }),
     variantTags: many(variantTags, { relationName: "variantTags" }),
   })
-)
+);
 
 export const variantImagesRelations = relations(variantImages, ({ one }) => ({
   productVariants: one(productVariants, {
@@ -163,7 +163,7 @@ export const variantImagesRelations = relations(variantImages, ({ one }) => ({
     references: [productVariants.id],
     relationName: "variantImages",
   }),
-}))
+}));
 
 export const variantTagsRelations = relations(variantTags, ({ one }) => ({
   productVariants: one(productVariants, {
@@ -171,7 +171,7 @@ export const variantTagsRelations = relations(variantTags, ({ one }) => ({
     references: [productVariants.id],
     relationName: "variantTags",
   }),
-}))
+}));
 
 export const reviews = pgTable(
   "reviews",
@@ -191,9 +191,9 @@ export const reviews = pgTable(
     return {
       productIdx: index("productIdx").on(table.productID),
       userIdx: index("userIdx").on(table.userID),
-    }
+    };
   }
-)
+);
 
 export const reviewRelations = relations(reviews, ({ one }) => ({
   user: one(users, {
@@ -206,12 +206,12 @@ export const reviewRelations = relations(reviews, ({ one }) => ({
     references: [products.id],
     relationName: "reviews",
   }),
-}))
+}));
 
 export const userRelations = relations(users, ({ many }) => ({
   reviews: many(reviews, { relationName: "user_reviews" }),
   orders: many(orders, { relationName: "user_orders" }),
-}))
+}));
 
 export const orders = pgTable("orders", {
   id: serial("id").primaryKey(),
@@ -223,7 +223,7 @@ export const orders = pgTable("orders", {
   created: timestamp("created").defaultNow(),
   receiptURL: text("receiptURL"),
   paymentIntentID: text("paymentIntentID"),
-})
+});
 
 export const ordersRelations = relations(orders, ({ one, many }) => ({
   user: one(users, {
@@ -232,7 +232,7 @@ export const ordersRelations = relations(orders, ({ one, many }) => ({
     relationName: "user_orders",
   }),
   orderProduct: many(orderProduct, { relationName: "orderProduct" }),
-}))
+}));
 
 export const orderProduct = pgTable("orderProduct", {
   id: serial("id").primaryKey(),
@@ -246,7 +246,7 @@ export const orderProduct = pgTable("orderProduct", {
   orderID: serial("orderID")
     .notNull()
     .references(() => orders.id, { onDelete: "cascade" }),
-})
+});
 
 export const orderProductRelations = relations(orderProduct, ({ one }) => ({
   order: one(orders, {
@@ -264,4 +264,4 @@ export const orderProductRelations = relations(orderProduct, ({ one }) => ({
     references: [productVariants.id],
     relationName: "productVariants",
   }),
-}))
+}));

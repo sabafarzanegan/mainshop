@@ -8,7 +8,7 @@ function Socials() {
       <form action={signinwithGoogle}>
         <Button
           type="submit"
-          className="bg-transparent text-primary hover:bg-gray-200 border border-gray-200 w-full flex items-center justify-center gap-x-2 ">
+          className="bg-transparent text-primary hover:text-primary hover:bg-gray-200 border border-gray-200 w-full flex items-center justify-center gap-x-2 dark:text-white  dark:hover:text-primary ">
           <span>
             <FcGoogle className="text-lg" />
           </span>
@@ -18,7 +18,7 @@ function Socials() {
       <form action={signinwithGithub}>
         <Button
           type="submit"
-          className="bg-transparent text-primary hover:bg-gray-200 border border-gray-200 w-full flex items-center justify-center gap-x-2">
+          className="bg-transparent text-primary hover:text-primary hover:bg-gray-200 border border-gray-200 w-full flex items-center justify-center gap-x-2 dark:text-white  dark:hover:text-primary">
           <span>
             <SiGithub className="text-lg text-black" />
           </span>

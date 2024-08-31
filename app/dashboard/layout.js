@@ -7,6 +7,7 @@ import { auth } from "../../db/auth";
 import Dashnav from "../../components/main/navbar/Dashnav";
 async function Dashboardlayout({ children }) {
   const session = await auth();
+  
 
   const userLinks = [
     { name: "سفارشات", path: "/dashboard/orders", icons: <FiShoppingBag /> },
@@ -34,7 +35,7 @@ async function Dashboardlayout({ children }) {
   const allLinks = [...adminLinks, ...userLinks];
   return (
     <div>
-      <Dashnav allLinks={allLinks}/>
+      <Dashnav allLinks={allLinks} />
       <h1>layout</h1>
       {children}
     </div>

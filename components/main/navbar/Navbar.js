@@ -3,7 +3,7 @@ import { HiOutlineShoppingCart } from "react-icons/hi";
 import { BiLogIn } from "react-icons/bi";
 import { auth } from "../../../db/auth";
 import UserButton from "../userButton/UserButton";
-import { logo } from "../../../public/images/logo.png";
+
 import Image from "next/image";
 
 async function Navbar() {
@@ -12,9 +12,7 @@ async function Navbar() {
   return (
     <div className="flex items-center justify-between py-4">
       {/* logo */}
-      <div>
-        <img src={logo} />
-      </div>
+      <div>logo</div>
       {/* signin  button and card shop */}
       <div className="flex items-center justify-between gap-x-6">
         {/* cart shop */}

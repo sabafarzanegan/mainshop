@@ -17,6 +17,7 @@ import { FiShoppingBag } from "react-icons/fi";
 import { TiWeatherSunny } from "react-icons/ti";
 import { GoMoon } from "react-icons/go";
 import { useTheme } from "next-themes";
+import Link from "next/link";
 
 function UserButton({ user }) {
   const { setTheme } = useTheme();
@@ -41,8 +42,8 @@ function UserButton({ user }) {
           </DropdownMenuShortcut>
         </DropdownMenuItem>
 
-        <DropdownMenuItem className="py-4">
-          <span>تنظیمات</span>
+        <DropdownMenuItem className="py-4"> 
+          <Link href="/dashboard">تنظیمات</Link>
           <DropdownMenuShortcut>
             <IoSettingsOutline className="text-base" />
           </DropdownMenuShortcut>

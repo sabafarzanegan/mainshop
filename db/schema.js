@@ -7,7 +7,6 @@ import {
   boolean,
   pgEnum,
   unique,
-  PgTable,
   serial,
   real,
   index,
@@ -29,7 +28,7 @@ export const users = pgTable("user", {
   image: text("image"),
   password: text("password"),
   twoFactorEnabled: boolean("twoFactorEnabled").default(false),
-  roles: RoleEnum("roles").default("user"),
+  role: RoleEnum("roles").default("user"),
   customerID: text("customerID"),
 });
 

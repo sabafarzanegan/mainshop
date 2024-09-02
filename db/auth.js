@@ -21,5 +21,5 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       allowDangerousEmailAccountLinking: true,
     }),
   ],
-  secret: process.env.NEXT_PUBLIC_SECRET,
+  secret: "tfg1YcmS0ICmFhetYuQ976ZcZOd5R+fmw762Bu5KDG9ZY2K6uRLEuWyzI6k",
 });

@@ -14,13 +14,12 @@ function page() {
     <Card className="py-4 px-2">
       <CardHeader>
         <CardTitle>ثبت نام</CardTitle>
-        <CardContent>
+        <CardContent className="space-y-4">
           <Registerform />
+          <Socials />
         </CardContent>
       </CardHeader>
-      <CardFooter className="block space-y-4">
-        <Socials />
-      </CardFooter>
+      {/* <CardFooter className="block space-y-4"></CardFooter> */}
       <Link
         href="/auth/login"
         className="font-semibold text-primary dark:text-white mt-4 m-auto px-2 ">

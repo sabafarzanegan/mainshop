@@ -8,6 +8,10 @@ import { createSafeActionClient } from "next-safe-action";
 import { z } from "zod";
 import { findUser, getUsers } from "../lib/utils";
 import bcrypt from "bcrypt";
+import {
+  generateemailVarifivationToken,
+  sendverificationEmail,
+} from "./tokens";
 
 export const signinwithGoogle = async () => {
   await signIn("google", { redirectTo: "/" });
@@ -58,24 +62,28 @@ export const emailSignin = actionClient
 export const emailSignup = actionClient.schema(formSignup).action(
   async ({ parsedInput: { username, email, password } }) => {
     const hashpassword = await bcrypt.hash(password, 10);
-
-    console.log(hashpassword);
-
+    // console.log(hashpassword);
     const findingUser = await findUser(email);
-    console.log(findingUser);
-    console.log(findingUser.length);
-
+    // console.log(findingUser);
+    // console.log(findingUser.length);
     if (findingUser.length == 0) {
       await db.insert(users).values({
         name: username,
         password: hashpassword,
         email: email,
       });
+      const verificationToken = await generateemailVarifivationToken(email);
+      console.log(verificationToken);
+      await sendverificationEmail(
+        verificationToken[0].email,
+        verificationToken[0].token
+      );
       return { message: "success" };
     } else {
       return { message: "error" };
     }
   },
+
   {
     onSuccess: ({ data }) => {
       console.log(data);

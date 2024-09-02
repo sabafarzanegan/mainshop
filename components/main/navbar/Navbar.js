@@ -5,15 +5,9 @@ import { auth } from "../../../db/auth";
 import UserButton from "../userButton/UserButton";
 
 import Image from "next/image";
-import { findUser, getUsers } from "../../../lib/utils";
 
 async function Navbar() {
   const session = await auth();
-
-  // const users = await getUsers();
-  // console.log(users);
-  const findingUser = await findUser(session?.user.email);
-  console.log(findingUser);
 
   return (
     <div className="flex items-center justify-between py-4">

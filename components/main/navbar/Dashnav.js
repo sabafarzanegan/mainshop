@@ -14,8 +14,8 @@ function Dashnav({ allLinks }) {
             whileTap={{ scale: 0.95 }}
             key={index}
             className={`${
-              path === link.path ? " bg-primary  px-3 py-1 text-white" : ""
-            }  rounded-md`}>
+              path === link.path ? " bg-primary  text-white" : ""
+            }  rounded-md border border-primary px-3 py-1`}>
             <Link href={link.path}>
               <div className="flex items-center justify-center gap-x-2">
                 <p>{link.name}</p>

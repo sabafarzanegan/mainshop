@@ -14,8 +14,8 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { emailSignup } from "../../../db/action";
 import { useAction } from "next-safe-action/hooks";
-import { useState } from "react";
 import Mainalert from "../Mainalert";
+
 const formSchema = z.object({
   username: z.string().min(4, {
     message: "username is required.",
@@ -29,8 +29,6 @@ const formSchema = z.object({
 });
 
 function Registerform() {
-  const [error, setError] = useState("");
-
   const { execute, status, result } = useAction(emailSignup);
 
   function onSubmit(values) {
@@ -101,8 +99,11 @@ function Registerform() {
               </FormItem>
             )}
           />
-          <Button type="submit" className="w-full bg-primary hover:bg-primary ">
-            ورود
+          <Button
+            disabled={status === "executing"}
+            type="submit"
+            className="w-full bg-primary hover:bg-primary ">
+            {status === "executing" ? "در حال ارسال" : "ثبت نام"}
           </Button>
         </form>
       </Form>
@@ -111,7 +112,7 @@ function Registerform() {
           {result?.data?.message === "success" && (
             <Mainalert
               title="موفقیت"
-              variant=""
+              variant="success"
               message="ثبت نام شما با موفقیت انجام شد"
             />
           )}

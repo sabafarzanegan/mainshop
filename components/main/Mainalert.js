@@ -3,7 +3,11 @@ import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
 
 function Mainalert({ variant, message, title }) {
   return (
-    <Alert variant={variant} className="py-2 px-4">
+    <Alert
+      variant={variant}
+      className={`${
+        variant === "success" ? "bg-green-500 border border-green-400 " : ""
+      } py-2 px-4`}>
       <AlertTitle className="font-semibold">{title}</AlertTitle>
       <AlertDescription>{message}</AlertDescription>
     </Alert>

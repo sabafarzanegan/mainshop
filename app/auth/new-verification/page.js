@@ -1,5 +1,10 @@
+import Newverificationform from "../../../components/main/authentications/Newverificationform";
 function page() {
-  return <div>new verification</div>;
+  return (
+    <div>
+      <Newverificationform />
+    </div>
+  );
 }
 
 export default page;

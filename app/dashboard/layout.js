@@ -7,37 +7,39 @@ import { auth } from "../../db/auth";
 import Dashnav from "../../components/main/navbar/Dashnav";
 async function Dashboardlayout({ children }) {
   const session = await auth();
-  
+  console.log(session);
 
   const userLinks = [
-    { name: "سفارشات", path: "/dashboard/orders", icons: <FiShoppingBag /> },
     { name: "تنظیمات", path: "/dashboard/settings", icons: <CiSettings /> },
+    { name: "سفارشات", path: "/dashboard/orders", icons: <FiShoppingBag /> },
   ];
 
-  //   const adnminLinks = session?.user.roles === "admin" &&
-  const adminLinks = [
-    {
-      name: "آمار",
-      path: "/dashboard/analitycs",
-      icons: <FaRegChartBar />,
-    },
-    {
-      name: "اضافه کردن محصول",
-      path: "/dashboard/create-product",
-      icons: <IoMdAddCircleOutline />,
-    },
-    {
-      name: "محصولات",
-      path: "/dashboard/products",
-      icons: <MdProductionQuantityLimits />,
-    },
-  ];
-  const allLinks = [...adminLinks, ...userLinks];
+  const adminLinks =
+    session?.user.role === "admin"
+      ? [
+          {
+            name: "آمار",
+            path: "/dashboard/analitycs",
+            icons: <FaRegChartBar />,
+          },
+          {
+            name: "اضافه کردن محصول",
+            path: "/dashboard/create-product",
+            icons: <IoMdAddCircleOutline />,
+          },
+          {
+            name: "محصولات",
+            path: "/dashboard/products",
+            icons: <MdProductionQuantityLimits />,
+          },
+        ]
+      : [];
+
+  const allLinks = [...userLinks, ...adminLinks];
   return (
-    <div>
+    <div className="flex items-start w-full  gap-x-6">
       <Dashnav allLinks={allLinks} />
-      <h1>layout</h1>
-      {children}
+      <main className="py-4">{children}</main>
     </div>
   );
 }

@@ -43,7 +43,7 @@ function UserButton({ user }) {
         </DropdownMenuItem>
 
         <DropdownMenuItem className="py-4">
-          <Link href="/dashboard">تنظیمات</Link>
+          <Link href="/dashboard/settings">تنظیمات</Link>
           <DropdownMenuShortcut>
             <IoSettingsOutline className="text-base" />
           </DropdownMenuShortcut>

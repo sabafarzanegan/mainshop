@@ -28,7 +28,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   },
   callbacks: {
     async session({ session, token }) {
-      // console.log(session, token);
+      console.log(session, token);
 
       if (session && token.sub) {
         session.user.id = token.sub;
@@ -98,20 +98,14 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         if (credentials) {
           const { email, password } = credentials;
 
-          // const user = await db
-          //   .select()
-          //   .from(users)
-          //   .where(eq(users.email, validatedFields.email));
           const user = await findUser(email);
-          // console.log(user);
-
-          // if (findingUser.length == 0) return null;
+          console.log(user);
 
           const passwordMatch = await bcrypt.compare(
             password,
             user[0].password
           );
-          // console.log(passwordMatch);
+          console.log(passwordMatch);
 
           if (passwordMatch) return user[0];
         } else {

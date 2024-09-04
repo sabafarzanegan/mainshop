@@ -4,10 +4,11 @@ import { BiLogIn } from "react-icons/bi";
 import { auth } from "../../../db/auth";
 import UserButton from "../userButton/UserButton";
 
-import Image from "next/image";
+// import Image from "next/image";
 
 async function Navbar() {
   const session = await auth();
+  // console.log(session.user);
 
   return (
     <div className="flex items-center justify-between py-4">

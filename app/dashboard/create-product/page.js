@@ -1,11 +1,28 @@
+import { redirect } from "next/navigation";
+import { auth } from "../../../db/auth";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "../../../components/ui/card";
+import ProductForm from "../../../components/main/product/ProductForm";
 
-
-function page() {
+async function page() {
+  const session = await auth();
+  if (session?.user.role !== "admin") return redirect("/");
   return (
-    <div>
-      create pro page
-    </div>
-  )
+    <>
+      <Card>
+        <CardHeader>
+          <CardTitle>ساختن محصول جدید</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <ProductForm />
+        </CardContent>
+      </Card>
+    </>
+  );
 }
 
-export default page
+export default page;

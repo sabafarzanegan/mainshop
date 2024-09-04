@@ -7,7 +7,6 @@ import { auth } from "../../db/auth";
 import Dashnav from "../../components/main/navbar/Dashnav";
 async function Dashboardlayout({ children }) {
   const session = await auth();
-  console.log(session);
 
   const userLinks = [
     { name: "تنظیمات", path: "/dashboard/settings", icons: <CiSettings /> },
@@ -39,7 +38,7 @@ async function Dashboardlayout({ children }) {
   return (
     <div className="flex items-start w-full  gap-x-6">
       <Dashnav allLinks={allLinks} />
-      <main className="py-4">{children}</main>
+      <main className="py-4 flex-1">{children}</main>
     </div>
   );
 }

@@ -1,14 +1,14 @@
 import { FiAlertCircle } from "react-icons/fi";
-function formerror({ message }) {
+function Formerror({ message }) {
   if (!message) return null;
 
   return (
     <div>
-      <h2>
+      <h2 className="flex items-center justify-between">
         <FiAlertCircle />
         <p>{message}</p>
       </h2>
     </div>
   );
 }
-export default formerror;
+export default Formerror;

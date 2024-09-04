@@ -46,17 +46,22 @@ const formSignup = z.object({
 export const emailSignin = actionClient
   .schema(formSignin)
   .action(async ({ parsedInput: { email, password } }) => {
-    // const existingUser = await db.query.users.findFirst({
-    //   where: eq(users.email, email),
-    // });
-    // if (existingUser?.email !== email) {
-    //   return { error: "email not found" };
-    // }
-    // if (!existingUser.emailVerified) {
-    //   return { error: "email is not verified" };
-    // }
     console.log(email, password);
-    return { success: email };
+
+    const findingUser = await findUser(email);
+    console.log(findingUser);
+    if (findingUser[0]?.email == email) {
+      await signIn("credentials", { email, password, redirectTo: "/" });
+      return { message: "success" };
+    } else if (findingUser[0]?.email !== email) {
+      return { message: "error" };
+    }
+
+    // else {
+    //   console.log(email, password);
+    //   await signIn("credentials", { email, password, redirectTo: "/" });
+    //   return { message: "success" };
+    // }
   });
 
 export const emailSignup = actionClient.schema(formSignup).action(

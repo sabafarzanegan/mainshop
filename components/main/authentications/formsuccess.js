@@ -1,13 +1,13 @@
 import { FaRegCheckCircle } from "react-icons/fa";
 
-function formsuccess({ message }) {
+function Formsuccess({ message }) {
   if (!message) return null;
   return (
-    <div>
+    <div className="flex items-center justify-between">
       <FaRegCheckCircle />
       {message}
     </div>
   );
 }
 
-export default formsuccess;
+export default Formsuccess;

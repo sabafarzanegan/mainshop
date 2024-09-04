@@ -1,8 +1,9 @@
 "use server";
 import { eq } from "drizzle-orm";
 import { db } from "./drizzle";
-import { emailTokens } from "./schema";
+import { emailTokens, users } from "./schema";
 import { Resend } from "resend";
+import { findUser } from "../lib/utils";
 const getverificationToken = async (email) => {
   try {
     const verificationToken = await db
@@ -47,4 +48,36 @@ export const sendverificationEmail = async (email, token) => {
   });
   if (error) console.log(error);
   if (data) return data;
+};
+
+export const newverification = async (token) => {
+  const existingtoken = await getverificationToken(token);
+  console.log(existingtoken);
+
+  if (existingtoken.length == 0) {
+    return { error: "token not found" };
+  }
+  const hasexpired = new Date(existingtoken.expires) < new Date();
+  console.log(hasexpired);
+
+  if (hasexpired) {
+    return { error: "token has expired" };
+  }
+
+  const existinguser = await findUser(existingtoken[0].email);
+  console.log(existinguser);
+
+  if (existinguser.length == 0) {
+    return { error: "email does not exist" };
+  } else {
+    await db
+      .update(users)
+      .set({
+        emailVerified: new Date(),
+        email: existingtoken.email,
+      })
+      .where(eq(users.email, existingtoken.email));
+    await db.delete(emailTokens).where(eq(emailTokens.id, existingtoken.id));
+    return { success: "email verified" };
+  }
 };

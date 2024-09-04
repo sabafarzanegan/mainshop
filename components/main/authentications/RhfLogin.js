@@ -14,7 +14,8 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { emailSignin } from "../../../db/action";
 import { useAction } from "next-safe-action/hooks";
-import { useState } from "react";
+
+import Mainalert from "../Mainalert";
 const formSchema = z.object({
   email: z.string().email({
     message: "email is not invalid",
@@ -25,16 +26,9 @@ const formSchema = z.object({
 });
 
 function RhfLogin() {
-  const [error, setError] = useState("");
-
-  const { execute, status } = useAction(emailSignin, {
-    onSuccess(data) {
-      console.log(data);
-    },
-  });
+  const { execute, status, result } = useAction(emailSignin);
   function onSubmit(values) {
     execute(values);
-    console.log(values);
   }
 
   const form = useForm({
@@ -79,9 +73,26 @@ function RhfLogin() {
               </FormItem>
             )}
           />
-          <Button type="submit" className="w-full bg-primary hover:bg-primary ">
-            ورود
+          <Button
+            disabled={status === "executing"}
+            type="submit"
+            className="w-full bg-primary hover:bg-primary ">
+            {status === "executing" ? "در حال ورود" : "ورود"}
           </Button>
+          {result?.data?.message === "success" && (
+            <Mainalert
+              title="موفقیت"
+              variant="success"
+              message="ورود با موفقیت انجام شد."
+            />
+          )}
+          {result?.data?.message === "error" && (
+            <Mainalert
+              title="شکست"
+              variant="destructive"
+              message="دوباره تلاش کنید."
+            />
+          )}
         </form>
       </Form>
     </>

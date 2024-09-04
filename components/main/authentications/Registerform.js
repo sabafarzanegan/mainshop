@@ -113,7 +113,7 @@ function Registerform() {
             <Mainalert
               title="موفقیت"
               variant="success"
-              message="ثبت نام شما با موفقیت انجام شد"
+              message="ایمیل تایید برای شما ارسال شد."
             />
           )}
         </div>

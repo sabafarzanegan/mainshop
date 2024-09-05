@@ -3,15 +3,17 @@
 import { eq } from "drizzle-orm";
 import { signIn } from "../db/auth";
 import { db } from "./drizzle";
-import { users } from "./schema";
+import { products, users } from "./schema";
 import { createSafeActionClient } from "next-safe-action";
 import { z } from "zod";
 import { findUser, getUsers } from "../lib/utils";
 import bcrypt from "bcrypt";
+
 import {
   generateemailVarifivationToken,
   sendverificationEmail,
 } from "./tokens";
+import { revalidatePath } from "next/cache";
 
 export const signinwithGoogle = async () => {
   await signIn("google", { redirectTo: "/" });
@@ -43,6 +45,18 @@ const formSignup = z.object({
     message: "password is required.",
   }),
 });
+
+const productype = z.object({
+  id: z.number().optional(),
+  description: z.string().min(8, {
+    message: "description must be atleast 8 char1cters",
+  }),
+  title: z.string(),
+  price: z.coerce
+    .number({ invalid_type_error: "price must be number" })
+    .positive({ message: "price mist be positive number" }),
+});
+
 export const emailSignin = actionClient
   .schema(formSignin)
   .action(async ({ parsedInput: { email, password } }) => {
@@ -89,6 +103,29 @@ export const emailSignup = actionClient.schema(formSignup).action(
     }
   },
 
+  {
+    onSuccess: ({ data }) => {
+      console.log(data);
+    },
+  }
+);
+
+export const create_product = actionClient.schema(productype).action(
+  async ({ parsedInput: { description, title, price, id } }) => {
+    console.log(description, title, id, price);
+    try {
+      const newProduct = await db
+        .insert(products)
+        .values({ description, title, price });
+      console.log(newProduct);
+
+      return { message: "success" };
+    } catch (error) {
+      console.log(error);
+      revalidatePath("/dashboard/create-product");
+      return { message: error };
+    }
+  },
   {
     onSuccess: ({ data }) => {
       console.log(data);

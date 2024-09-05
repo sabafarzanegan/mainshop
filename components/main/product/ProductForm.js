@@ -14,6 +14,9 @@ import {
 import { Input } from "../../ui/input";
 import { Button } from "../../ui/button";
 import Tiptap from "./Tiptab";
+import { useAction } from "next-safe-action/hooks";
+import { create_product } from "../../../db/action";
+import Mainalert from "../Mainalert";
 
 const formSchema = z.object({
   id: z.number().optional(),
@@ -27,6 +30,8 @@ const formSchema = z.object({
 });
 
 function ProductForm() {
+  const { execute, status, result, reset } = useAction(create_product);
+
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -37,10 +42,10 @@ function ProductForm() {
     mode: "onChange",
   });
   function onSubmit(values) {
-    console.log(values);
+    execute(values);
   }
   return (
-    <Form {...form}>
+    <Form className="" {...form}>
       <form className="space-y-6" onSubmit={form.handleSubmit(onSubmit)}>
         <FormField
           control={form.control}
@@ -93,7 +98,16 @@ function ProductForm() {
             </FormItem>
           )}
         />
-        <Button type="submit">ساختن</Button>
+        <Button disabled={status === "executing"} type="submit">
+          {status === "executing" ? "در حال ساخت" : "ساختن"}
+        </Button>
+        {result?.data?.message === "success" && (
+          <Mainalert
+            variant="success"
+            message="محصول با موفقیت اضافه شد."
+            title="موفق"
+          />
+        )}
       </form>
     </Form>
   );

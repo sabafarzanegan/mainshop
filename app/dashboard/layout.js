@@ -38,7 +38,7 @@ async function Dashboardlayout({ children }) {
   return (
     <div className="flex items-start w-full  gap-x-6">
       <Dashnav allLinks={allLinks} />
-      <main className="py-4 flex-1">{children}</main>
+      <main className=" flex-1">{children}</main>
     </div>
   );
 }

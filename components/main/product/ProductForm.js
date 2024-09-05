@@ -13,6 +13,7 @@ import {
 } from "../../ui/form";
 import { Input } from "../../ui/input";
 import { Button } from "../../ui/button";
+import Tiptap from "./Tiptab";
 
 const formSchema = z.object({
   id: z.number().optional(),
@@ -33,6 +34,7 @@ function ProductForm() {
       description: "",
       price: 0,
     },
+    mode: "onChange",
   });
   function onSubmit(values) {
     console.log(values);
@@ -65,7 +67,8 @@ function ProductForm() {
             <FormItem>
               <FormLabel>توضیحات</FormLabel>
               <FormControl>
-                <Input placeholder="توضیحات مورد نظر را وارد کنید" {...field} />
+                <Tiptap value={form.value} />
+                {/* <Input placeholder="توضیحات مورد نظر را وارد کنید" {...field} /> */}
               </FormControl>
 
               <FormMessage />

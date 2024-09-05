@@ -8,7 +8,7 @@ function Dashnav({ allLinks }) {
   const path = usePathname();
 
   return (
-    <section className="min-h-screen w-60">
+    <section className="h-full w-60">
       <Card className="h-full ">
         <CardContent>
           <ul className="w-full flex flex-col items-center justify-between py-6 gap-y-6">

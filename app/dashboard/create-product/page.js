@@ -10,6 +10,8 @@ import ProductForm from "../../../components/main/product/ProductForm";
 
 async function page() {
   const session = await auth();
+  console.log(session);
+
   if (session?.user.role !== "admin") return redirect("/");
   return (
     <>

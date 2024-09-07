@@ -5,7 +5,7 @@ import { signIn } from "../db/auth";
 import { db } from "./drizzle";
 import { products, users } from "./schema";
 import { createSafeActionClient } from "next-safe-action";
-import { z } from "zod";
+import { object, z } from "zod";
 import { findUser, getUsers } from "../lib/utils";
 import bcrypt from "bcrypt";
 
@@ -13,7 +13,8 @@ import {
   generateemailVarifivationToken,
   sendverificationEmail,
 } from "./tokens";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
+import { redirect } from "next/navigation";
 
 export const signinwithGoogle = async () => {
   await signIn("google", { redirectTo: "/" });
@@ -110,6 +111,14 @@ export const emailSignup = actionClient.schema(formSignup).action(
   }
 );
 
+export const delete_product = async (id) => {
+  try {
+    const data = await db.delete(products).where(eq(products.id, id));
+    revalidatePath("/dashboard/products");
+  } catch (error) {
+    console.log(error);
+  }
+};
 export const create_product = actionClient.schema(productype).action(
   async ({ parsedInput: { description, title, price, id } }) => {
     console.log(description, title, id, price);
@@ -118,17 +127,18 @@ export const create_product = actionClient.schema(productype).action(
         .insert(products)
         .values({ description, title, price });
       console.log(newProduct);
-
+      revalidatePath("/dashboard/products");
       return { message: "success" };
     } catch (error) {
       console.log(error);
-      revalidatePath("/dashboard/create-product");
       return { message: error };
     }
   },
   {
     onSuccess: ({ data }) => {
       console.log(data);
+
+      // redirect("/dashboard/products");
     },
   }
 );

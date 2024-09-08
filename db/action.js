@@ -121,14 +121,24 @@ export const delete_product = async (id) => {
 };
 export const create_product = actionClient.schema(productype).action(
   async ({ parsedInput: { description, title, price, id } }) => {
-    console.log(description, title, id, price);
+    console.log(price, id);
+
     try {
-      const newProduct = await db
-        .insert(products)
-        .values({ description, title, price });
-      console.log(newProduct);
-      revalidatePath("/dashboard/products");
-      return { message: "success" };
+      if (!id) {
+        const newProduct = await db
+          .insert(products)
+          .values({ description, title, price });
+        revalidatePath("/dashboard/create-product");
+        return { message: "محصول با موفقیت ساخته شد!" };
+      }
+
+      if (id) {
+        const editProduct = await db
+          .update(products)
+          .set({ description, title, price })
+          .where(eq(products.id, id));
+        return { message: "محصول با موفقیت آپدیت شد." };
+      }
     } catch (error) {
       console.log(error);
       return { message: error };
@@ -137,8 +147,6 @@ export const create_product = actionClient.schema(productype).action(
   {
     onSuccess: ({ data }) => {
       console.log(data);
-
-      // redirect("/dashboard/products");
     },
   }
 );

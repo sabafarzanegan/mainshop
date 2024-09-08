@@ -5,8 +5,8 @@ import StarterKit from "@tiptap/starter-kit";
 import { Toggle } from "../../ui/toggle";
 import { Bold, Italic, List, ListOrdered, Strikethrough } from "lucide-react";
 import { useFormContext } from "react-hook-form";
+import { useEffect } from "react";
 const Tiptap = ({ value }) => {
-  console.log(value);
   const { setValue } = useFormContext();
 
   const editor = useEditor({
@@ -39,7 +39,11 @@ const Tiptap = ({ value }) => {
     },
     content: value,
   });
-
+  useEffect(() => {
+    if (editor?.isEmpty) {
+      editor.commands.setContent(value);
+    }
+  }, [value]);
   return (
     <div>
       <div>

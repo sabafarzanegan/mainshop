@@ -13,18 +13,18 @@ import {
 } from "../../../components/ui/card";
 
 async function page() {
-  const allProducts = await db.select().from(products);
-  console.log(allProducts);
-  if (!allProducts) return <h2>محصولی وجود ندارد</h2>;
-  const datatable = allProducts.map((product) => {
-    return {
-      id: product.id,
-      title: product.title,
-      price: product.price,
-      image: "https://fakeimg.pl/600x400",
-      varients: [],
-    };
-  });
+  // const allProducts = await db.select().from(products);
+  // console.log(allProducts);
+  // if (!allProducts) return <h2>محصولی وجود ندارد</h2>;
+  // const datatable = allProducts.map((product) => {
+  //   return {
+  //     id: product.id,
+  //     title: product.title,
+  //     price: product.price,
+  //     image: "https://fakeimg.pl/600x400",
+  //     varients: [],
+  //   };
+  // });
 
   return (
     <>
@@ -33,7 +33,7 @@ async function page() {
           <CardTitle>لیست محصولات</CardTitle>
         </CardHeader>
         <CardContent>
-          <Datatable data={datatable} header={columns} />
+          <Datatable header={columns} />
         </CardContent>
       </Card>
     </>

@@ -17,8 +17,30 @@ import {
   TableRow,
 } from "../../ui/table";
 import { delete_product } from "../../../db/action";
+import Link from "next/link";
+import { db } from "../../../db/drizzle";
+import { products } from "../../../db/schema";
+import { useEffect, useState } from "react";
 
-function Datatable({ data, header }) {
+function Datatable({ header }) {
+  const [data, setData] = useState([]);
+  const getData = async () => {
+    const allData = await db.select().from(products);
+    const datatable = allData.map((product) => {
+      return {
+        id: product.id,
+        title: product.title,
+        price: product.price,
+        image: "https://fakeimg.pl/600x400",
+        varients: [],
+      };
+    });
+    setData(datatable);
+  };
+  useEffect(() => {
+    getData();
+  }, [data]);
+
   return (
     <>
       <Table className="overflow-x-hidden">
@@ -63,7 +85,9 @@ function Datatable({ data, header }) {
                       </DropdownMenuItem>
                       <DropdownMenuItem className="flex items-center justify-between">
                         <Pen className="w-4 h-4" />
-                        <Button>ادیت</Button>
+                        <Link href={`/dashboard/create-product?id=${item.id}`}>
+                          <Button>ادیت</Button>
+                        </Link>
                       </DropdownMenuItem>
                     </DropdownMenuGroup>
                   </DropdownMenuContent>

@@ -10,15 +10,11 @@ import ProductForm from "../../../components/main/product/ProductForm";
 
 async function page() {
   const session = await auth();
-  console.log(session);
-
   if (session?.user.role !== "admin") return redirect("/");
   return (
     <>
       <Card>
-        <CardHeader>
-          <CardTitle>ساختن محصول جدید</CardTitle>
-        </CardHeader>
+        <CardHeader>{/* <CardTitle>ساختن محصول جدید</CardTitle> */}</CardHeader>
         <CardContent>
           <ProductForm />
         </CardContent>

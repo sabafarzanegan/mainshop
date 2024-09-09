@@ -1,5 +1,5 @@
 import { db } from "../../../db/drizzle";
-import { products } from "../../../db/schema";
+import { products, productVariants } from "../../../db/schema";
 import Datatable from "../../../components/main/product/data-table";
 import { columns } from "../../../components/main/product/columns";
 
@@ -11,20 +11,25 @@ import {
   CardHeader,
   CardTitle,
 } from "../../../components/ui/card";
+import { eq } from "drizzle-orm";
 
 async function page() {
-  // const allProducts = await db.select().from(products);
-  // console.log(allProducts);
-  // if (!allProducts) return <h2>محصولی وجود ندارد</h2>;
-  // const datatable = allProducts.map((product) => {
-  //   return {
-  //     id: product.id,
-  //     title: product.title,
-  //     price: product.price,
-  //     image: "https://fakeimg.pl/600x400",
-  //     varients: [],
-  //   };
-  // });
+  const allProducts = await db
+    .select()
+    .from(products)
+    .rightJoin(productVariants, eq(products.id, productVariants.productID));
+
+  console.log(allProducts);
+  if (!allProducts) return <h2>محصولی وجود ندارد</h2>;
+  const datatable = allProducts.map((product) => {
+    return {
+      id: product.id,
+      title: product.title,
+      price: product.price,
+      image: "https://fakeimg.pl/600x400",
+      varients: [],
+    };
+  });
 
   return (
     <>

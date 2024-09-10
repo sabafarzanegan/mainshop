@@ -21,7 +21,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "../../ui/dialog";
-import { Label } from "../../ui/label";
+import InputTags from "../../main/product/InputTags";
 import { Button } from "../../ui/button";
 export const VariantSchema = z.object({
   productID: z.number(),
@@ -69,9 +69,7 @@ function ProductVarient({
   function onSubmit(values) {
     console.log(values);
   }
-  useEffect(() => {
-    console.log(varient);
-  }, [varient]);
+
   return (
     <Dialog className="text-right space-t-4">
       <DialogTrigger asChild>{children}</DialogTrigger>
@@ -121,7 +119,12 @@ function ProductVarient({
                 <FormItem>
                   <FormLabel>Tags</FormLabel>
                   <FormControl>
-                    {/* <InputTags {...field} onChange={(e) => field.onChange(e)} /> */}
+                    <InputTags
+                      {...field}
+                      onChange={(e) => {
+                        field.onChange(e);
+                      }}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

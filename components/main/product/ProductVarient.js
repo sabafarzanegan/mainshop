@@ -23,6 +23,7 @@ import {
 } from "../../ui/dialog";
 import InputTags from "../../main/product/InputTags";
 import { Button } from "../../ui/button";
+import VarientImage from "../product/VarientImage";
 export const VariantSchema = z.object({
   productID: z.number(),
   id: z.number().optional(),
@@ -73,7 +74,7 @@ function ProductVarient({
   return (
     <Dialog className="text-right space-t-4">
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[425px]  h-[80%] overflow-y-scroll">
         <DialogHeader>
           <DialogTitle className="text-right font-semibold  mt-4">
             {editMode ? "اصلاح متغیر" : "ساختن متغیر"}
@@ -130,6 +131,7 @@ function ProductVarient({
                 </FormItem>
               )}
             />
+            <VarientImage />
             <div className="flex items-center justify-between">
               <Button type="submit">
                 {editMode ? "ذخیره تغییرات" : "ایجاد تغییر"}

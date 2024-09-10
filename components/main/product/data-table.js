@@ -33,15 +33,6 @@ import { eq } from "drizzle-orm";
 
 function Datatable({ header }) {
   const [data, setData] = useState([]);
-  const [Images, setImages] = useState([]);
-
-  const getImageVarient = async () => {
-    const Image = await db
-      .select()
-      .from(productVariants)
-      .fullJoin(variantImages, eq(productVariants.id, variantImages.variantID));
-    setImages(Image);
-  };
 
   const specificProduct = async () => {
     const varients = await db
@@ -53,19 +44,6 @@ function Datatable({ header }) {
     setData(varients);
   };
 
-  // const getData = async () => {
-  //   const allData = await db.select().from(products);
-
-  //   const datatable = allData.map((product) => {
-  //     return {
-  //       id: product.id,
-  //       title: product.title,
-  //       price: product.price,
-  //       image: "",
-  //       varients: [],
-  //     };
-  //   });
-  // };
   useEffect(() => {
     specificProduct();
   }, [data]);

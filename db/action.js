@@ -3,7 +3,13 @@
 import { eq } from "drizzle-orm";
 import { signIn } from "../db/auth";
 import { db } from "./drizzle";
-import { products, users } from "./schema";
+import {
+  products,
+  productVariants,
+  users,
+  variantImages,
+  variantTags,
+} from "./schema";
 import { createSafeActionClient } from "next-safe-action";
 import { object, z } from "zod";
 import { findUser, getUsers } from "../lib/utils";
@@ -15,6 +21,7 @@ import {
 } from "./tokens";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
+import { VariantSchema } from "../components/main/product/ProductVarient";
 
 export const signinwithGoogle = async () => {
   await signIn("google", { redirectTo: "/" });
@@ -150,3 +157,107 @@ export const create_product = actionClient.schema(productype).action(
     },
   }
 );
+
+export const create_variant = async (formData) => {
+  const {
+    color,
+    productType,
+    editMode,
+    id,
+    productID,
+    tags,
+    variantImages: newImgs,
+  } = formData;
+  try {
+    if (editMode) {
+      const editVariant = await db
+        .update(productVariants)
+        .set({ color, productType, updated: new Date() })
+        .where(eq(productVariants.id, id))
+        .returning();
+      await db
+        .delete(variantTags)
+        .where(eq(variantTags.variantID, editVariant[0].id));
+      await db.insert(variantTags).values(
+        tags.map((tag) => ({
+          tag,
+          variantID: editVariant[0].id,
+        }))
+      );
+      await db
+        .delete(variantImages)
+        .where(eq(variantImages.variantID, editVariant[0].id));
+      await db.insert(variantImages).values(
+        newImgs.map((img, idx) => ({
+          name: img.name,
+          size: img.size,
+          url: img.url,
+          variantID: editVariant[0].id,
+          order: idx,
+        }))
+      );
+      algoliaIndex.partialUpdateObject({
+        objectID: editVariant[0].id.toString(),
+        id: editVariant[0].productID,
+        productType: editVariant[0].productType,
+        variantImages: newImgs[0].url,
+      });
+      revalidatePath("/dashboard/products");
+      return { success: `Edited ${productType}` };
+    }
+    if (!editMode) {
+      const newVariant = await db
+        .insert(productVariants)
+        .values({
+          color,
+          productType,
+          productID,
+        })
+        .returning();
+
+      const product = await db
+        .select()
+        .from(products)
+        .where(eq(products.id, productID));
+      await db.insert(variantTags).values(
+        tags.map((tag) => ({
+          tag,
+          variantID: newVariant[0].id,
+        }))
+      );
+      await db.insert(variantImages).values(
+        newImgs.map((img, idx) => ({
+          name: img.name,
+          size: img.size,
+          url: img.url,
+          variantID: newVariant[0].id,
+          order: idx,
+        }))
+      );
+      if (product) {
+        algoliaIndex.saveObject({
+          objectID: newVariant[0].id.toString(),
+          id: newVariant[0].productID,
+          title: product.title,
+          price: product.price,
+          productType: newVariant[0].productType,
+          variantImages: newImgs[0].url,
+        });
+      }
+      revalidatePath("/dashboard/products");
+      return { success: `Added ${productType}` };
+    }
+  } catch (error) {
+    return { error: "Failed to create variant" };
+  }
+};
+
+export const delete_variant = async (variantID) => {
+  try {
+    const delete_variant = await db
+      .delete(productVariants)
+      .where(eq(productVariants.id, variantID));
+  } catch (error) {
+    console.log(error);
+  }
+};

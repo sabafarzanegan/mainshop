@@ -1,3 +1,4 @@
+"use client";
 import { useState } from "react";
 import { Input } from "../../ui/input";
 
@@ -23,19 +24,20 @@ function InputTags({ onChange, value }) {
           : "ring-offset-0 outline-none ring-ring ring-0"
       }`}>
       <div className="rounded-md min-h-[2.5rem]  p-2 flex gap-2 flex-wrap items-center">
-        {value.map((tag) => (
-          <div className="">
-            <Badge variant="outline">
-              {tag}
+        {value.length > 0 &&
+          value.map((tag) => (
+            <div className="">
+              <Badge variant="outline">
+                {tag}
 
-              <button
-                className="w-3 ml-1"
-                onClick={() => onChange(value.filter((i) => i !== tag))}>
-                <XIcon className="w-3" />
-              </button>
-            </Badge>
-          </div>
-        ))}
+                <button
+                  className="w-3 ml-1"
+                  onClick={() => onChange(value.filter((i) => i !== tag))}>
+                  <XIcon className="w-3" />
+                </button>
+              </Badge>
+            </div>
+          ))}
 
         <div className="flex">
           <Input

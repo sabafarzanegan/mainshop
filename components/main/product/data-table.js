@@ -26,9 +26,14 @@ import {
 import { delete_product } from "../../../db/action";
 import Link from "next/link";
 import { db } from "../../../db/drizzle";
-import { products, productVariants, variantImages } from "../../../db/schema";
-import { useEffect, useState } from "react";
-import ProductVarient from "./ProductVarient";
+import {
+  products,
+  productVariants,
+  variantImages,
+  variantTags,
+} from "../../../db/schema";
+import { useState, useEffect } from "react";
+import ProductVariant from "./ProductVarient";
 import { eq } from "drizzle-orm";
 
 function Datatable({ header }) {
@@ -39,9 +44,52 @@ function Datatable({ header }) {
       .select()
       .from(products)
       .fullJoin(productVariants, eq(products.id, productVariants.productID))
-      .fullJoin(variantImages, eq(productVariants.id, variantImages.variantID));
+      .fullJoin(variantImages, eq(productVariants.id, variantImages.variantID))
+      .fullJoin(variantTags, eq(productVariants.id, variantTags.variantID));
+    const organizedVariants = [];
 
-    setData(varients);
+    varients.forEach((item) => {
+      let existingProduct = organizedVariants.find(
+        (variant) => variant.products.id === item.products.id
+      );
+
+      if (existingProduct) {
+        if (item.productVariants) {
+          const existingVariant = existingProduct.productVariants.find(
+            (variant) => variant.id === item.productVariants.id
+          );
+          if (!existingVariant) {
+            existingProduct.productVariants.push(item.productVariants);
+          }
+        }
+
+        if (item.variantImages) {
+          const existingImage = existingProduct.variantImages.find(
+            (image) => image.id === item.variantImages.id
+          );
+          if (!existingImage) {
+            existingProduct.variantImages.push(item.variantImages);
+          }
+        }
+
+        if (item.variantTags) {
+          const existingTag = existingProduct.variantTags.find(
+            (tag) => tag.id === item.variantTags.id
+          );
+          if (!existingTag) {
+            existingProduct.variantTags.push(item.variantTags);
+          }
+        }
+      } else {
+        organizedVariants.push({
+          products: item.products,
+          productVariants: item.productVariants ? [item.productVariants] : [],
+          variantImages: item.variantImages ? [item.variantImages] : [],
+          variantTags: item.variantTags ? [item.variantTags] : [],
+        });
+      }
+    });
+    setData(organizedVariants);
   };
 
   useEffect(() => {
@@ -72,43 +120,50 @@ function Datatable({ header }) {
               <TableCell>
                 <img
                   src={
-                    item.variantImages
-                      ? item.variantImages.url
+                    item.variantImages[0]
+                      ? item.variantImages[0].url
                       : "https://placehold.co/600x400"
                   }
                   className="e-8 h-8"
                 />
               </TableCell>
               <TableCell className="flex items-center justify-center gap-x-4">
-                <div>
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <ProductVarient
-                          editMode={true}
-                          productID={item?.productVariants?.productID}
-                          varient={item?.productVariants}
-                          variantImages={item?.variantImages}>
-                          <div
-                            className="w-4 h-4 rounded-full"
-                            style={{ background: item?.productVariants?.color }}
-                          />
-                        </ProductVarient>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>Add to library</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
+                <div className="flex items-center justify-center gap-x-2">
+                  {item.productVariants.map((varient) => (
+                    <div className="">
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <ProductVariant
+                              editMode={true}
+                              productID={varient.productID}
+                              variant={item}>
+                              <div
+                                className="w-4 h-4 rounded-full"
+                                style={{
+                                  background: varient.color,
+                                }}
+                              />
+                            </ProductVariant>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>Add to library</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    </div>
+                  ))}
                 </div>
 
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <span>
-                        <ProductVarient productID={item.id} editMode={false}>
+                        <ProductVariant
+                          productID={item.products.id}
+                          editMode={false}>
                           <PlusCircle className="h-4 w-4 cursor-pointer" />
-                        </ProductVarient>
+                        </ProductVariant>
                       </span>
                     </TooltipTrigger>
                     <TooltipContent>
@@ -126,7 +181,10 @@ function Datatable({ header }) {
                     <DropdownMenuGroup>
                       <DropdownMenuItem className="flex items-center justify-between">
                         <Trash className="w-4 h-4" />
-                        <form action={() => delete_product(item.id)}>
+                        <form
+                          onClick={() => {
+                            delete_product(item.products.id);
+                          }}>
                           <Button
                             variant="destructive"
                             className="text-xs px-4">
@@ -136,7 +194,8 @@ function Datatable({ header }) {
                       </DropdownMenuItem>
                       <DropdownMenuItem className="flex items-center justify-between">
                         <Pen className="w-4 h-4" />
-                        <Link href={`/dashboard/create-product?id=${item.id}`}>
+                        <Link
+                          href={`/dashboard/create-product?id=${item.products.id}`}>
                           <Button>ادیت</Button>
                         </Link>
                       </DropdownMenuItem>

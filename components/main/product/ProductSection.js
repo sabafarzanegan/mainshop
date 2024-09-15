@@ -3,14 +3,14 @@ import { Card, CardContent, CardHeader, CardTitle } from "../../ui/card";
 import Image from "next/image";
 import { Badge } from "../../ui/badge";
 function ProductSection({ data }) {
-  console.log(data);
+  //   console.log(data);
 
   return (
     <main className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
       {data.map((product) => (
         <Link
-          key={product.products.id}
-          href={`/products/${product.products.id}?id=${product.products.id}&productID=${product.productVariants[0].id}&price=${product.products.price}`}>
+          key={product?.products?.id}
+          href={`/products/${product?.products?.id}?id=${product?.products?.id}&productID=${product?.productVariants[0]?.id}&price=${product?.products?.price}&title=${product?.products?.title}&type=${product?.productVariants[0].productType}&image=${product?.variantImages[0].url}`}>
           <Card className="">
             <CardHeader>
               <Image

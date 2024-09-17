@@ -10,7 +10,7 @@ function ProductSection({ data }) {
       {data.map((product) => (
         <Link
           key={product?.products?.id}
-          href={`/products/${product?.products?.id}?id=${product?.products?.id}&productID=${product?.productVariants[0]?.id}&price=${product?.products?.price}&title=${product?.products?.title}&type=${product?.productVariants[0].productType}&image=${product?.variantImages[0].url}`}>
+          href={`/products/${product?.products?.id}?id=${product?.products?.id}&productID=${product?.productVariants[0]?.id}&price=${product?.products?.price}&title=${product?.products?.title}&type=${product?.productVariants[0]?.productType}&image=${product?.variantImages[0]?.url}`}>
           <Card className="">
             <CardHeader>
               <Image

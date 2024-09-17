@@ -9,9 +9,18 @@ import {
 import ProductPick from "../../../components/main/product/ProductPick";
 import ProductShow from "../../../components/main/product/ProductShow";
 import ReviewForm from "../../../components/main/review/ReviewForm";
+import { auth } from "../../../db/auth";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "../../../components/ui/card";
 
 async function page({ params }) {
-  console.log(params);
+  const session = await auth();
+  console.log(session);
+
   const product = await db
     .select()
     .from(products)
@@ -65,7 +74,7 @@ async function page({ params }) {
   });
 
   return (
-    <main className="w-full">
+    <main className="w-full space-y-6 py-10">
       <section className=" mx-auto flex flex-wrap-reverse md:flex-nowrap gap-y-6 justify-center md:justify-between gap-x-10 items-center md:items-start">
         {/* information div */}
         <div className="flex gap-2 flex-col flex-1 ">
@@ -96,18 +105,31 @@ async function page({ params }) {
                   productID={organizedVariants[0].products.id}
                   title={organizedVariants[0]?.products.title}
                   price={organizedVariants[0]?.products.price}
-                  image={organizedVariants[0]?.variantImages[0].url}
+                  image={organizedVariants[0]?.variantImages}
                 />
               ))}
             </div>
           </div>
         </div>
-        {/* image div */}
+
         <div className="">
           <ProductShow variants={organizedVariants} />
         </div>
       </section>
-      <ReviewForm />
+      {session?.user && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center justify-center gap-x-4">
+              <p className="text-lg font-semibold text-primary">
+                {session?.user?.email}
+              </p>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ReviewForm />
+          </CardContent>
+        </Card>
+      )}
     </main>
   );
 }

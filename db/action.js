@@ -1,11 +1,12 @@
 "use server";
 
-import { eq } from "drizzle-orm";
-import { signIn } from "../db/auth";
+import { and, eq } from "drizzle-orm";
+import { auth, signIn } from "../db/auth";
 import { db } from "./drizzle";
 import {
   products,
   productVariants,
+  reviews,
   users,
   variantImages,
   variantTags,
@@ -22,6 +23,7 @@ import {
 import { revalidatePath, revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
 import { VariantSchema } from "../components/main/product/ProductVarient";
+import { reviewSchema } from "../components/main/review/ReviewForm";
 
 export const signinwithGoogle = async () => {
   await signIn("google", { redirectTo: "/" });
@@ -260,4 +262,30 @@ export const delete_variant = async (variantID) => {
   } catch (error) {
     console.log(error);
   }
+};
+
+export const addReview = async (formData) => {
+  const { productID, rating, comment } = formData;
+  console.log(productID);
+
+  const session = await auth();
+  console.log(session);
+
+  const reviewExisted = await db
+    .select()
+    .from(reviews)
+    .where(
+      and(eq(reviews.productID, productID), eq(reviews.userID, session.user.id))
+    );
+
+  const newReview = await db
+    .insert(reviews)
+    .values({
+      productID,
+      rating,
+      comment,
+      userID: session.user.id,
+    })
+    .returning();
+  console.log(newReview);
 };

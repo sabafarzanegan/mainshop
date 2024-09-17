@@ -14,6 +14,13 @@ export default async function Home() {
     .fullJoin(productVariants, eq(products.id, productVariants.productID))
     .fullJoin(variantImages, eq(productVariants.id, variantImages.variantID))
     .fullJoin(variantTags, eq(productVariants.id, variantTags.variantID));
+  // const productss = await db
+  //   .select()
+  //   .from(productVariants)
+  //   .fullJoin(products, eq(productVariants.productID, products.id))
+  //   .fullJoin(variantImages, eq(productVariants.id, variantImages.variantID))
+  //   .fullJoin(variantTags, eq(productVariants.id, variantTags.variantID));
+  // console.log(productss);
 
   const organizedVariants = [];
 

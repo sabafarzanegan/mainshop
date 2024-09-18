@@ -1,11 +1,11 @@
 "use client";
 import { Popover, PopoverContent, PopoverTrigger } from "../../ui/popover";
-import { Button } from "../../ui/button";
+import ButtonSubmitted from "../product/ButtonSubmitted";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSearchParams } from "next/navigation";
-import { useAction } from "next-safe-action/hooks";
+
 import {
   Form,
   FormField,
@@ -19,6 +19,7 @@ import { Input } from "../../ui/input";
 import { Star } from "lucide-react";
 import { cn } from "../../../lib/utils";
 import { addReview } from "../../../db/action";
+import { Button } from "../../ui/button";
 
 export const reviewSchema = z.object({
   productID: z.number(),
@@ -28,10 +29,7 @@ export const reviewSchema = z.object({
     .min(10, { message: "لطفا نظر خود را در حداقل 10 کلمه بیان کنید" }),
 });
 function ReviewForm() {
-  // const { execute, status, result } = useAction(addReview);
   function onSubmit(values) {
-    // execute(values);
-    console.log(values);
     addReview(values);
   }
   const param = useSearchParams();
@@ -49,24 +47,12 @@ function ReviewForm() {
     <Popover>
       <PopoverTrigger>
         <span className="px-3 py-1 bg-primary text-white rounded-md">
-          نظر خود را بذارید.
+          نظر خود را بنویسید
         </span>
       </PopoverTrigger>
       <PopoverContent>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            {/* <FormField
-              control={form.control}
-              name="productID"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <Input className="hidden" placeholder="" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            /> */}
             <FormField
               control={form.control}
               name="comment"
@@ -112,8 +98,11 @@ function ReviewForm() {
                 </FormItem>
               )}
             />
-            <Button className="w-full" type="submit">
-              افزودن نظر
+            <Button
+              type="submit"
+              className="w-full"
+              disabled={form.formState.isLoading}>
+              {form.formState.isSubmitting ? "در حال ارسال" : "ثبت نظر"}
             </Button>
           </form>
         </Form>

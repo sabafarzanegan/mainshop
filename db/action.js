@@ -278,14 +278,20 @@ export const addReview = async (formData) => {
       and(eq(reviews.productID, productID), eq(reviews.userID, session.user.id))
     );
 
-  const newReview = await db
-    .insert(reviews)
-    .values({
-      productID,
-      rating,
-      comment,
-      userID: session.user.id,
-    })
-    .returning();
-  console.log(newReview);
+  // console.log(reviewExisted);
+
+  if (reviewExisted.length === 0) {
+    const newReview = await db
+      .insert(reviews)
+      .values({
+        productID,
+        rating,
+        comment,
+        userID: session.user.id,
+      })
+      .returning();
+    console.log(newReview);
+  } else {
+    console.log("شما قبلا برای این محصول نظر ثبت کردید.");
+  }
 };

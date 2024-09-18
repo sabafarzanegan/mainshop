@@ -19,6 +19,7 @@ function ProductSection({ data }) {
                 src={product.variantImages[0].url}
                 alt={product.variantImages[0].name}
                 loading="lazy"
+                className="rounded-md"
               />
             </CardHeader>
             <CardContent className="space-y-4">

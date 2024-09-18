@@ -16,10 +16,11 @@ import {
   CardHeader,
   CardTitle,
 } from "../../../components/ui/card";
-
+import AllReview from "../../../components/main/review/AllReview";
 async function page({ params }) {
+  console.log(params);
+
   const session = await auth();
-  console.log(session);
 
   const product = await db
     .select()
@@ -130,6 +131,14 @@ async function page({ params }) {
           </CardContent>
         </Card>
       )}
+      <Card>
+        <CardHeader>
+          <CardTitle>نظرات</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-5">
+          <AllReview productID={params.slug} />
+        </CardContent>
+      </Card>
     </main>
   );
 }

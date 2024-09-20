@@ -17,6 +17,7 @@ import {
   CardTitle,
 } from "../../../components/ui/card";
 import AllReview from "../../../components/main/review/AllReview";
+import Addcart from "../../../components/main/cart/Addcart";
 async function page({ params }) {
   console.log(params);
 
@@ -78,7 +79,7 @@ async function page({ params }) {
     <main className="w-full space-y-6 py-10">
       <section className=" mx-auto flex flex-wrap-reverse md:flex-nowrap gap-y-6 justify-center md:justify-between gap-x-10 items-center md:items-start">
         {/* information div */}
-        <div className="flex gap-2 flex-col flex-1 ">
+        <div className="flex gap-2 flex-col flex-1 space-y-6 ">
           {/* title div */}
           <div className="py-3 space-y-4 px-1 border-b border-b-gray-300">
             <h1 className="font-bold text-base">
@@ -111,6 +112,7 @@ async function page({ params }) {
               ))}
             </div>
           </div>
+          <Addcart />
         </div>
 
         <div className="">

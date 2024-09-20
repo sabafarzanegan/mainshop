@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { HiOutlineShoppingCart } from "react-icons/hi";
+import CartDrawer from "../cart/Cart-Drawer";
 import { BiLogIn } from "react-icons/bi";
 import { auth } from "../../../db/auth";
 import UserButton from "../userButton/UserButton";
@@ -18,9 +18,7 @@ async function Navbar() {
       <div className="flex items-center justify-between gap-x-6">
         {/* cart shop */}
         <div>
-          <Link href="/">
-            <HiOutlineShoppingCart className="text-xl" />
-          </Link>
+          <CartDrawer />
         </div>
         <div>
           {session?.user ? (

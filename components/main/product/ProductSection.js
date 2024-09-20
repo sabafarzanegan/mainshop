@@ -16,8 +16,8 @@ function ProductSection({ data }) {
               <Image
                 width={620}
                 height={480}
-                src={product.variantImages[0].url}
-                alt={product.variantImages[0].name}
+                src={product.variantImages[0]?.url}
+                alt={product.variantImages[0]?.name}
                 loading="lazy"
                 className="rounded-md"
               />
@@ -29,7 +29,7 @@ function ProductSection({ data }) {
                 </h2>
                 <h5 className="text-sm">
                   <span className="">نوع محصول:</span>
-                  {product.productVariants[0].productType}
+                  {product.productVariants[0]?.productType}
                 </h5>
               </div>
               <div className="">

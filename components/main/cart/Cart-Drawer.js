@@ -27,12 +27,12 @@ function CartDrawer() {
                 animate={{ scale: 1, opacity: 1 }}
                 initial={{ scale: 0, opacity: 0 }}
                 exit={{ scale: 0 }}
-                className="absolute flex items-center justify-center -top-0.5 right-0 w-4 h-4 dark:bg-primary bg-primary/50 text-xs font-bold rounded-full">
+                className="absolute flex items-center justify-center -top-0.5 right-0 w-6 h-6 dark:bg-primary bg-primary/75 text-base font-bold rounded-full">
                 {cart.length.toLocaleString("fa")}
               </motion.span>
             )}
           </AnimatePresence>
-          <ShoppingCart />
+          <ShoppingCart className="w-8 h-8" />
         </div>
       </DrawerTrigger>
       <DrawerContent className="py-4">

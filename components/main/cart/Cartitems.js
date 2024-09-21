@@ -12,7 +12,6 @@ import Image from "next/image";
 import { MinusCircle, PlusCircle } from "lucide-react";
 function Cartitems() {
   const { cart, addToCart, removeFromCart } = useCartStore();
-  console.log(cart);
 
   const totalPrice = useMemo(() => {
     return cart.reduce((acc, item) => {
@@ -25,21 +24,23 @@ function Cartitems() {
         <h1 className="text-center  text-xl">سبد خرید خالی است</h1>
       )}
       {cart.length > 0 && (
-        <div>
-          <Table>
+        <div className="h-80 overflow-y-auto">
+          <Table className="max-w-4xl mx-auto">
             <TableHeader>
               <TableRow>
                 <TableCell>محصول</TableCell>
                 <TableCell>قیمت</TableCell>
                 <TableCell>تعداد</TableCell>
                 <TableCell>تصویر</TableCell>
-                <TableCell>مجموع</TableCell>
               </TableRow>
             </TableHeader>
             <TableBody>
               {cart.map((item) => (
                 <TableRow>
-                  <TableCell>{item.name}</TableCell>
+                  <TableCell className="text-sm md:text-base">
+                    {item.name}
+                  </TableCell>
+
                   <TableCell>{item.price.toLocaleString("fa")}</TableCell>
                   <TableCell className="flex items-center justify-center gap-x-2">
                     <PlusCircle
@@ -79,6 +80,10 @@ function Cartitems() {
               ))}
             </TableBody>
           </Table>
+          <div className=" space-y-4 mt-4 text-center">
+            <span>قیمت کل:</span>
+            <p className="font-bold ">{totalPrice.toLocaleString("fa")}</p>
+          </div>
         </div>
       )}
     </div>

@@ -24,6 +24,7 @@ import { revalidatePath, revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
 import { VariantSchema } from "../components/main/product/ProductVarient";
 import { reviewSchema } from "../components/main/review/ReviewForm";
+import { formSettings } from "../app/dashboard/settings/Cardsettings";
 
 export const signinwithGoogle = async () => {
   await signIn("google", { redirectTo: "/" });
@@ -294,4 +295,46 @@ export const addReview = async (formData) => {
   } else {
     console.log("شما قبلا برای این محصول نظر ثبت کردید.");
   }
+};
+
+export const updateUser = async (values) => {
+  console.log(values);
+  const session = await auth();
+  console.log(session);
+
+  if (!session) return { error: "کاربر یافت نشد." };
+  const dbUser = await db
+    .select()
+    .from(users)
+    .where(eq(users.id, session.user.id));
+  console.log(dbUser);
+
+  if (values.password && values.newPassword && dbUser[0].password) {
+    const passwordMatch = await bcrypt.compare(
+      values?.password,
+      dbUser[0].password
+    );
+    console.log(passwordMatch);
+
+    if (!passwordMatch) {
+      return { error: "رمز عبور صحیح نمی باشد." };
+    }
+    const hashPassword = await bcrypt.hash(values.newPassword, 10);
+    values.password = hashPassword;
+    values.newPassword = undefined;
+    console.log(hashPassword);
+  }
+
+  const UpdateUser = await db
+    .update(users)
+    .set({
+      name: values.name,
+      password: values.password,
+      image: values.image,
+    })
+    .where(eq(users.id, dbUser[0].id))
+    .returning();
+  console.log(UpdateUser);
+
+  revalidatePath("/dashboard/settings");
 };

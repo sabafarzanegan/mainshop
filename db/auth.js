@@ -6,7 +6,7 @@ import Github from "next-auth/providers/Github";
 import Credentials from "next-auth/providers/credentials";
 import bcrypt from "bcrypt";
 import * as z from "zod";
-import { users } from "./schema";
+import { accounts, users } from "./schema";
 import { eq } from "drizzle-orm";
 import { findUser } from "../lib/utils";
 
@@ -53,15 +53,16 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         .where(eq(users.id, token.sub));
       // console.log(existingUser);
 
-      // const existingUser = await db.query.users.findFirst({
-      //   where: eq(users.id, token.sub),
-      // });
-      // if (!existingUser) return token;
+      if (!existingUser) return token;
+      const existingAccount = await db
+        .select()
+        .from(accounts)
+        .where(eq(accounts.userId, existingUser.id));
       // const existingAccount = await db.query.accounts.findFirst({
       //   where: eq(accounts.userId, existingUser.id),
       // });
 
-      // token.isOAuth = !!existingAccount;
+      token.isOAuth = !!existingAccount;
       token.name = existingUser[0].name;
       token.email = existingUser[0].email;
       token.role = existingUser[0].role;

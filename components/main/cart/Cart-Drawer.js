@@ -1,5 +1,10 @@
 "use client";
-import { ShoppingCart } from "lucide-react";
+import {
+  ArrowBigLeft,
+  ArrowLeft,
+  ArrowUpLeft,
+  ShoppingCart,
+} from "lucide-react";
 import { useCartStore } from "../../../lib/client-store";
 import {
   Drawer,
@@ -15,7 +20,8 @@ import Cartitems from "../cart/Cartitems";
 import { Button } from "../../ui/button";
 import { AnimatePresence, motion } from "framer-motion";
 function CartDrawer() {
-  const { cart } = useCartStore();
+  const { cart, checkoutProgress, setCheckoutProgress } = useCartStore();
+  console.log(checkoutProgress);
 
   return (
     <Drawer>
@@ -37,9 +43,25 @@ function CartDrawer() {
       </DrawerTrigger>
       <DrawerContent className="py-4">
         <DrawerHeader>
-          <DrawerTitle className="text-center">سبد خرید</DrawerTitle>
+          <DrawerTitle className="text-center">
+            {checkoutProgress === "cart-page" && "سید خرید"}
+
+            {checkoutProgress === "payment-page" && "سفارش دهید"}
+            {checkoutProgress === "confirmation-page" &&
+              "سفارش خود را نهایی کنید"}
+          </DrawerTitle>
         </DrawerHeader>
-        <Cartitems />
+        {checkoutProgress === "payment-page" && (
+          <div
+            onClick={() => {
+              setCheckoutProgress("cart-page");
+            }}
+            className="flex items-center gap-x-2 text-center px-4">
+            <span className="text-sm">برگشت به سبد خرید</span>
+            <ArrowLeft className="w-4 h-4" />
+          </div>
+        )}
+        {checkoutProgress === "cart-page" && <Cartitems />}
       </DrawerContent>
     </Drawer>
   );
